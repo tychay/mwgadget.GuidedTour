@@ -18,18 +18,22 @@
 	// good for tracking what tour we are on
 	guiders.currentTour = '';
 
-	// "Hide Tour" link should show info
+	/**
+	 * + hideTour(): "Hide Tour" link shows an info guide before closing.
+	 *
+	 * Note: the info guide also generates an event.
+	 */
 	gt.hideTour = function (tour_name) {
 		// notify that we are dismissing the tour
 		//(not sure we need this)
 		//$.ajax({url:ajaxurl, data:{action:'guided_tour_hide', tour: GTL10n.tour, nonce: GTL10n.nonce }});
 
 		// interstial hiding...
-		//guiders.hideAll(); //Hide current guider
-		//guiders.show('gt-hide'); //show future help notice
+		guiders.hideAll(); //Hide current guider
+		guiders.show('gt-hide'); //show future help notice
 		// TODO: should launch a default tour element
 
-		guiders.endTour(); //remove cookies and hide guider
+		//guiders.endTour(); //remove cookies and hide guider
 	}
 	guiders.initGuider({
 		id: "gt-hide",
@@ -66,16 +70,14 @@
 		}
 
 		var pieces = guiderid.split(/-/);
-		console.log(pieces);
 
 		if ( pieces.length == 1 ) { return; } // should never happen, but let's be careful
 		var tourname = guiderid.substr(0, guiderid.length - pieces[pieces.length-1].length - 1);
 		gt.pingServer(guider, tourname, pieces[pieces.length-1]);
 	};
-	gt.pingServer = function(guider,tour,step) {
-		if ( mw.e3 ) {
-			//TODO
-			/*
+	gt.pingServer = function(guider, tour,step) {
+		//TODO
+		//if ( mw.e3 ) {
 			console.log({
 			//mw.e3.track( {
 				event: 'guidedtour',
@@ -83,17 +85,28 @@
 				step: step
 			});
 			/* */
-		}
+		//}
 	}
 	guiders._defaultSettings.onShow = gt.recordStats;
 
-	gt.endTour = function (tour_name) {
-		gt.pingServer( guider, tour_name, 'end' );
+	/**
+	 * endTour(): When you quit the tour (early) (step=end)
+	 */
+	gt.endTour = function() {
+		//strip gt-
+		var guiderid = guiders.currentTour
+
+		if ( guiders.currentTour ) {
+			gt.pingServer( guiders.currentTour, 'end' );
+		}
 		//TODO add dialog box asking if they want to end the tour permanently here
 		//var r=confirm(GTL10n.confirm_end);
 		//if (r) { gt_tour_complete(); }
 		guiders.endTour(); //remove session cookie and hide tour
 	}
+	/**
+	 * + tourComplete(): When you finish the tour (step=complete)
+	 */
 	gt.tourComplete = function(tour_name) {
 		gt.pingServer( guider, tour_name, 'complete' );
 		return;
