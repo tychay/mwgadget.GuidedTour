@@ -1,5 +1,3 @@
-jQuery(document).ready(function($) {
-
 guiders.initGuider({
 	id: "gt-test-1",
 	title: 'Testing',
@@ -31,6 +29,3 @@ guiders.initGuider({
 		{ name: 'End Tour', onclick: guiders.endTour }
 	]
 });
-
-});
-

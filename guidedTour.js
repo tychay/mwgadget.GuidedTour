@@ -1,11 +1,21 @@
-/**
- * Launcher for the Guided Tour using WordPress customized version of guiders.
- *
- * @author terry chay
- */
-jQuery(document).ready(function($) {
+ /**
+  * Gadget for Guided Tour for MediaWiki
+  *
+  * Uses a WordPress.com customized version of Optimize.ly's Guiders.js file.
+  *
+  * To use, add this, the guidedTour/* contents, and tours to mediawiki and edit the URL's
+  * to point to the right path, then include as a user script (for now).
+  *
+  * @package    mwgadget.GuidedTour
+  * @author     terry chay <tychay@mediawiki.org>
+  * @version    $Id$
+*/
+( function ( window, document, jQuery, mw ) {
+	'use strict';
 
-	gt_get_query = function() {
+	var gt = mw.guidedTour = mw.guidedTour || {};
+
+	gt.getQuery = function() {
 		var urlParams = {};
 		(function () {
 			var e,
@@ -20,7 +30,7 @@ jQuery(document).ready(function($) {
 		return urlParams;
 	}
 
-	queryString = gt_get_query();
+	var queryString = gt.getQuery();
 	//console.log(queryString);
 	if ( queryString.tour ) {
 		$.getScript(
@@ -31,9 +41,9 @@ jQuery(document).ready(function($) {
 				$.getScript(
 					'https://www.mediawiki.org/w/index.php?title=User:Tychay/tours/'+queryString.tour+'.js&action=raw&type=text/javascript',
 					function() {
-					guiders.resume('gt-'+queryString.tour+'-1');
+						guiders.resume('gt-'+queryString.tour+'-1');
 				});
 			}
 		);	
 	}
-});
+} ( window, document, jQuery, mw ) );

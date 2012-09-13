@@ -1,12 +1,14 @@
 /**
- * Utility functions common to all guided tours.
+ * Utility functions common to all guided tours (that are dependent on guiders.js).
  *
- * This was ported over from WordPress Guided Tour, customized as a MediaWiki Gadget
- * with the ability to autolaunch whatever it needs.
+ * This was ported over from WordPress Guided Tour, customized as a MediaWiki Gadget.
  *
  * @author terry chay
+ * @package    mwgadget.GuidedTour
+ * @author     terry chay <tychay@mediawiki.org>
+ * @version    $Id$
  */
-jQuery(document).ready(function($) {
+( function ( window, document, jQuery, mw, guiders ) {
 
 	// cookie the users when they are in the tour
 	guiders.cookie = 'mw-tour';
@@ -165,4 +167,4 @@ jQuery(document).ready(function($) {
 		return;
 	}
 
-});
+} (window, document, jQuery, mw, guiders) );
