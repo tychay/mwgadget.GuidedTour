@@ -37,7 +37,7 @@
 	}
 	guiders.initGuider({
 		id: "gt-hide",
-	    title: 'Remember!',
+		title: 'Remember!',
 		description: 'You can always start the tour again… If you know how :-D',
 
 		// attachment
@@ -93,11 +93,10 @@
 	 * endTour(): When you quit the tour (early) (step=end)
 	 */
 	gt.endTour = function() {
-		//strip gt-
-		var guiderid = guiders.currentTour
 
 		if ( guiders.currentTour ) {
-			gt.pingServer( guiders.currentTour, 'end' );
+			var guider = guiders._guiderById(guiders._lastCreatedGuiderID);
+			gt.pingServer( guider, guiders.currentTour, 'end' );
 		}
 		//TODO add dialog box asking if they want to end the tour permanently here
 		//var r=confirm(GTL10n.confirm_end);
@@ -140,8 +139,8 @@
 	 * 2. prev should be set to the the guide to backtrack to
 	 */
 	gt_onshow_check_submenu_shown = function(guider) {
-	    // shouldn't really need this first line.
-	    var attach_obj = ( typeof(guider.attachTo)=='string' ) ? $(guider.attachTo) : guider.attachTo;
+		// shouldn't really need this first line.
+		var attach_obj = ( typeof(guider.attachTo)=='string' ) ? $(guider.attachTo) : guider.attachTo;
 		    
 		if ( attach_obj.is(':hidden') ) {
 			return guiders.show(guider.prev);
