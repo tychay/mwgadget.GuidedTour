@@ -6,6 +6,8 @@
   * To use, add this, the guidedTour/* contents, and tours to mediawiki and edit the URL's
   * to point to the right path, then include as a user script (for now).
   *
+  * If moved or testing self, please edit the gadgetUrl and tourUrl params;
+  *
   * @package    mwgadget.GuidedTour
   * @author     terry chay <tychay@mediawiki.org>
   * @version    $Id$
@@ -14,6 +16,13 @@
 	'use strict';
 
 	var gt = mw.guidedTour = mw.guidedTour || {};
+
+	gt.gadgetUrl = 'https://www.mediawiki.org/w/index.php?title=User:Tychay/guidedTour/';
+	gt.tourUrl   = 'https://www.mediawiki.org/w/index.php?title=User:Tychay/tours/';
+	//stuff to tack on to the end to get the raw file. Remember to the & or ? in the start
+	// depends on the URL above.
+	gt.rawJs = '&action=raw&ctype=text/javascript';
+	gt.rawCss = '&action=raw&ctype=text/css';
 
 	gt.getQuery = function() {
 		var urlParams = {};
@@ -31,19 +40,30 @@
 	}
 
 	var queryString = gt.getQuery();
-	//console.log(queryString);
-	if ( queryString.tour ) {
+	var tourName = queryString.tour;
+
+	// Don't bother loading any more code if there isn't a tour going on
+	if ( tourName) {
+		// First load guiders and then load the stuff that depends on it, then launch
+		// the tour.
+		$("<link/>", {
+		   rel: "stylesheet",
+		   type: "text/css",
+		   href: gt.gadgetUrl + 'guiders.css' + gt.rawCss,
+		}).appendTo("head");
 		$.getScript(
-			'https://www.mediawiki.org/w/index.php?title=User:Tychay/guidedTour/guiders.js&action=raw&type=text/javascript',
+			gt.gadgetUrl + 'guiders.js' + gt.rawJs,
 			function() {
-				importScript('User:Tychay/guidedTour/utils.js');
-				importStylesheet('User:Tychay/guidedTour/guiders.css');
+				//$.getStylesheet( gt.gadgetUrl + 'guiders.css' + gt.rawCss ),
 				$.getScript(
-					'https://www.mediawiki.org/w/index.php?title=User:Tychay/tours/'+queryString.tour+'.js&action=raw&type=text/javascript',
+					gt.gadgetUrl + 'utils.js' + gt.rawJs,
 					function() {
-						guiders.resume('gt-'+queryString.tour+'-1');
-				});
-			}
-		);	
+						$.getScript(
+							gt.tourUrl + tourName + '.js' + gt.rawJs,
+							function() {
+								guiders.resume('gt-'+tourName+'-1');
+							});
+					});
+			});
 	}
 } ( window, document, jQuery, mw ) );

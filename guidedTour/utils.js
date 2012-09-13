@@ -10,6 +10,8 @@
  */
 ( function ( window, document, jQuery, mw, guiders ) {
 
+	var gt = mw.guidedTour = mw.guidedTour || {};
+
 	// cookie the users when they are in the tour
 	guiders.cookie = 'mw-tour';
 
@@ -51,7 +53,7 @@
 
 	gt_has_query = function (query_parts, uri) {
 		if ( uri && !gt_is_path( uri ) ) { return function() { return false; }; }
-		var urlParams = gt_get_query();
+		var urlParams = gt.getQuery();
 		for (var qname in query_parts) {
 			if ( typeof(urlParams[qname]) == 'undefined' )  { return function() { return false; }; }
 			if ( query_parts[qname] && ( urlParams[qname] != query_parts[qname] ) ) { return function() { return false; }; }
