@@ -28,6 +28,6 @@ guiders.initGuider({
 	//next: "gi-test-2",
 	buttons: [
 		{ name: 'Hide Tour', onclick: mw.guidedTour.hideTour, classString: "plain" },
-		{ name: 'End Tour', onclick: guiders.endTour }
+		{ name: 'End Tour', onclick: mw.guidedTour.endTour }
 	]
 });

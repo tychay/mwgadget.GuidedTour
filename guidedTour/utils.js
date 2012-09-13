@@ -87,8 +87,17 @@
 	}
 	guiders._defaultSettings.onShow = gt.recordStats;
 
-
-
+	gt.endTour = function (tour_name) {
+		gt.pingServer( guider, tour_name, 'end' );
+		//TODO add dialog box asking if they want to end the tour permanently here
+		//var r=confirm(GTL10n.confirm_end);
+		//if (r) { gt_tour_complete(); }
+		guiders.endTour(); //remove session cookie and hide tour
+	}
+	gt.tourComplete = function(tour_name) {
+		gt.pingServer( guider, tour_name, 'complete' );
+		return;
+	}
 
 
 
@@ -165,21 +174,5 @@
 
 
 
-	/*
-	gt_end_tour = function (tour_name) {
-		//TODO add dialog box asking if they want to end the tour permanently here
-		//var r=confirm(GTL10n.confirm_end);
-		//if (r) { gt_tour_complete(); }
-		guiders.endTour(); //remove session cookie and hide tour
-	}
-	*/
-
-	gt_tour_complete = function(tour_name) {
-		$.ajax({url:ajaxurl, data:{action:'guided_tour_complete', tour: GTL10n.tour, nonce: GTL10n.nonce }});
-		if ( guiders.currentTour ) {
-			new Image().src = document.location.protocol+'//stats.wordpress.com/g.gif?v=wpcom-no-pv&x_guided-tour=' + guiders.currentTour + '-complete'; 
-		}
-		return;
-	}
 
 } (window, document, jQuery, mw, guiders) );
