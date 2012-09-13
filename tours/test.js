@@ -1,3 +1,5 @@
+guiders.currentTour = 'test';
+
 guiders.initGuider({
 	id: "gt-test-1",
 	title: 'Testing',
@@ -8,7 +10,7 @@ guiders.initGuider({
 
 	next: "gt-test-2",
 	buttons: [
-		{ name: 'Hide Tour', onclick: guiders.mwHideTour, classString: "plain" },
+		{ name: 'Hide Tour', onclick: mw.guidedTour.hideTour, classString: "plain" },
 		{ name: 'Start Tour', onclick: guiders.next }
 	]
 });
@@ -25,7 +27,7 @@ guiders.initGuider({
 
 	//next: "gi-test-2",
 	buttons: [
-		{ name: 'Hide Tour', onclick: guiders.mwHideTour, classString: "plain" },
+		{ name: 'Hide Tour', onclick: mw.guidedTour.hideTour, classString: "plain" },
 		{ name: 'End Tour', onclick: guiders.endTour }
 	]
 });

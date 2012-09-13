@@ -18,17 +18,19 @@
 	// good for tracking what tour we are on
 	guiders.currentTour = '';
 
-	guiders.mwHideTour = function (tour_name) {
-		guiders.hideAll(); //Hide current guider
-		//guiders.endTour(); //remove cookies and hide guider
-		guiders.show('gt-hide'); //show future help notice
+	// "Hide Tour" link should show info
+	gt.hideTour = function (tour_name) {
 		// notify that we are dismissing the tour
 		//(not sure we need this)
 		//$.ajax({url:ajaxurl, data:{action:'guided_tour_hide', tour: GTL10n.tour, nonce: GTL10n.nonce }});
-		// TODO: should launch a default tour element
-	}
 
-	// "Hide Tour" link should show info
+		// interstial hiding...
+		//guiders.hideAll(); //Hide current guider
+		//guiders.show('gt-hide'); //show future help notice
+		// TODO: should launch a default tour element
+
+		guiders.endTour(); //remove cookies and hide guider
+	}
 	guiders.initGuider({
 		id: "gt-hide",
 	    title: 'Remember!',
@@ -44,6 +46,49 @@
 			{ name: 'Close', onclick: function() { guiders.endTour(); } }
 		]
 	});
+
+	// STATS!
+	/**
+	 * Record stats of guider being shown
+	 *
+	 * This is a named function so you can override onShow but still record the stat.
+	 */
+	gt.recordStats = function(guider) {
+		//strip gt-
+		var guiderid = guider.id.substr(3);
+
+		// hide event
+		if ( guiderid == 'gt-hide' ) {
+			if ( guiders.currentTour ) {
+				gt.pingServer(guider, guiders.currentTour, 'hide');
+			}
+			return;
+		}
+
+		var pieces = guiderid.split(/-/);
+		console.log(pieces);
+
+		if ( pieces.length == 1 ) { return; } // should never happen, but let's be careful
+		var tourname = guiderid.substr(0, guiderid.length - pieces[pieces.length-1].length - 1);
+		gt.pingServer(guider, tourname, pieces[pieces.length-1]);
+	};
+	gt.pingServer = function(guider,tour,step) {
+		if ( mw.e3 ) {
+			//TODO
+			/*
+			console.log({
+			//mw.e3.track( {
+				event: 'guidedtour',
+				tour: tour,
+				step: step
+			});
+			/* */
+		}
+	}
+	guiders._defaultSettings.onShow = gt.recordStats;
+
+
+
 
 
 
@@ -63,38 +108,6 @@
 
 
 
-	// STATS!
-	/**
-	 * Record stats of guider being shown
-	 *
-	 * This is a named function so you can override onShow but still record the stat.
-	 */
-	gt_record_stats = function(guider) {
-/*
-		//strip gt-
-		var guiderid = guider.id.substr(3);
-
-		// hide event
-		if ( guiderid == 'gt-hide' ) {
-			if ( guiders.currentTour ) {
-				new Image().src = document.location.protocol+'//stats.wordpress.com/g.gif?v=wpcom-no-pv&x_guided-tour=' + guiders.currentTour + '-hide'; 
-			}
-			return;
-		}
-
-		var pieces = guiderid.split(/-/);
-		if ( pieces.length == 1 ) { return; } // should never happen, but let's be careful
-		var tourname = guiderid.substr(0, guiderid.length - pieces[pieces.length-1].length - 1);
-		var append = guiderid;
-		// log the tourname only (at most) once per page view
-		if (guiders.currentTour != tourname) {
-			append += ',' + tourname;
-			guiders.currentTour = tourname;
-		}
-		new Image().src = document.location.protocol+'//stats.wordpress.com/g.gif?v=wpcom-no-pv&x_guided-tour=total,' + append;
-*/
-	};
-	//guiders._defaultSettings.onShow = gt_record_stats;
 
 	/**
 	 * Bind this to onshow for submenus elements in the admin menu
