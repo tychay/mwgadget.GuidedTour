@@ -33,15 +33,6 @@ jQuery(document).ready(function($) {
 					function() {
 					guiders.resume('gt-'+queryString.tour+'-1');
 				});
-				link = mw.util.addPortletLink(
-						'p-tb', '#', 'Launch Tour',
-						't-gtsample', 'Open a sample guided tour ', 'm', '#t-print' );
-/*
-				$(link).click(function(event) {
-					event.preventDefault();
-					guiders.resume('gt-test-1');
-				});
-*/
 			}
 		);	
 	}

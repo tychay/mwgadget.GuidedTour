@@ -17,12 +17,12 @@ guiders.initGuider({
 
 guiders.initGuider({
 	id: "gt-test-2",
-	title: 'Launcher',
-	description: 'You clicked here to launch this tour.',
+	title: 'Community portal',
+	description: 'This is the community portal page.',
 
 	// attachment
 	//overlay: true,
-	attachTo: '#t-gtsample',
+	attachTo: '#n-portal a',
 	position: '3',
 
 	//next: "gi-test-2",
