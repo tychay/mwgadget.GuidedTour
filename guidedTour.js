@@ -39,31 +39,47 @@
 		return urlParams;
 	}
 
+	// tour is either in get string or cookie (prefer get string)
 	var queryString = gt.getQuery();
-	var tourName = queryString.tour;
+	var tourName = queryString.tour.replace(/^(?:\.\.\/)+/, ''); //clean out path variables
+	var tourId;
+	if (tourName) {
+		var step = queryString.step;
+		if (!step) { step = '1'; }
+		tourId = 'gt-'+tourName+'-'+step;
+	} else {
+		tourId = $.cookie('mw-tour');
+		var guiderid = tourId.substr(3); //strip off 'gt-'
+		var pieces = guiderid.split(/-/);
+		// should always happen, but let's be careful
+		if ( pieces.length != 1 ) { 
+			tourName = guiderid.substr(0, guiderid.length - pieces[pieces.length-1].length - 1);
+			//step = pieces[pieces.length-1];
+		}
+	}
 
 	// Don't bother loading any more code if there isn't a tour going on
-	if ( tourName) {
-		// First load guiders and then load the stuff that depends on it, then launch
-		// the tour.
-		$("<link/>", {
-		   rel: "stylesheet",
-		   type: "text/css",
-		   href: gt.gadgetUrl + 'guiders.css' + gt.rawCss,
-		}).appendTo("head");
-		$.getScript(
-			gt.gadgetUrl + 'guiders.js' + gt.rawJs,
-			function() {
-				//$.getStylesheet( gt.gadgetUrl + 'guiders.css' + gt.rawCss ),
-				$.getScript(
-					gt.gadgetUrl + 'utils.js' + gt.rawJs,
-					function() {
-						$.getScript(
-							gt.tourUrl + tourName + '.js' + gt.rawJs,
-							function() {
-								guiders.resume('gt-'+tourName+'-1');
-							});
-					});
-			});
-	}
+	if ( !tourId || !tourName ) { return; }
+	// First load guiders and then load the stuff that depends on it, then launch
+	// the tour.
+	$("<link/>", {
+	   rel: "stylesheet",
+	   type: "text/css",
+	   href: gt.gadgetUrl + 'guiders.css' + gt.rawCss,
+	}).appendTo("head");
+	$.getScript(
+		gt.gadgetUrl + 'guiders.js' + gt.rawJs,
+		function() {
+			//$.getStylesheet( gt.gadgetUrl + 'guiders.css' + gt.rawCss ),
+			$.getScript(
+				gt.gadgetUrl + 'utils.js' + gt.rawJs,
+				function() {
+					$.getScript(
+						gt.tourUrl + tourName + '.js' + gt.rawJs,
+						function() {
+							guiders.resume(tourId);
+						});
+				});
+		}
+	);
 } ( window, document, jQuery, mw ) );
