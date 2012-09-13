@@ -616,7 +616,3 @@ var guiders = (function($) {
 
   return guiders;
 }).call(this, jQuery);
-
-importScript('User:Tychay/guidedTour/utils.js');
-importStylesheet('User:Tychay/guidedTour/guiders.css');
-

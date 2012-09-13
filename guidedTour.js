@@ -26,6 +26,8 @@ jQuery(document).ready(function($) {
 		$.getScript(
 			'https://www.mediawiki.org/w/index.php?title=User:Tychay/guidedTour/guiders.js&action=raw&type=text/javascript',
 			function() {
+				importScript('User:Tychay/guidedTour/utils.js');
+				importStylesheet('User:Tychay/guidedTour/guiders.css');
 				$.getScript(
 					'https://www.mediawiki.org/w/index.php?title=User:Tychay/tours/'+queryString.tour+'.js&action=raw&type=text/javascript',
 					function() {
