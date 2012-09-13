@@ -41,8 +41,11 @@
 
 	// tour is either in get string or cookie (prefer get string)
 	var queryString = gt.getQuery();
-	var tourName = queryString.tour.replace(/^(?:\.\.\/)+/, ''); //clean out path variables
+	var tourName = queryString.tour;
 	var tourId;
+	if (tourName) {
+		tourName = tourName.replace(/^(?:\.\.\/)+/, ''); //clean out path variables
+	}
 	if (tourName) {
 		var step = queryString.step;
 		if (!step) { step = '1'; }
