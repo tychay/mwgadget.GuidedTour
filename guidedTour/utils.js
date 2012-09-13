@@ -77,15 +77,17 @@
 	};
 	gt.pingServer = function(guider, tour,step) {
 		//TODO
-		//if ( mw.e3 ) {
+		if ( mw.e3 ) {
+			if (console && console.log) {
 			console.log({
 			//mw.e3.track( {
 				event: 'guidedtour',
 				tour: tour,
 				step: step
 			});
-			/* */
-		//}
+			}
+		}
+		/* */
 	}
 	guiders._defaultSettings.onShow = gt.recordStats;
 
