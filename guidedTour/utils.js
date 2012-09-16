@@ -76,14 +76,15 @@
 		gt.pingServer(guider, tourname, pieces[pieces.length-1]);
 	};
 	gt.pingServer = function(guider, tour,step) {
-		//TODO
+		//TODO: format output for e3 experiments
 		if ( mw.e3 ) {
 			if (console && console.log) {
 			console.log({
 			//mw.e3.track( {
-				event: 'guidedtour',
+				eventId: 'guidedtour-'+tour+'-'+step,
 				tour: tour,
-				step: step
+				step: step,
+				lastid: guider.id
 			});
 			}
 		}
@@ -111,6 +112,37 @@
 	gt.tourComplete = function(tour_name) {
 		gt.pingServer( guider, tour_name, 'complete' );
 		return;
+	}
+
+
+
+	//
+	// UTILITY FUNCTIONS
+	//
+	/**
+	 * Add to onShow to parse description as wikitext
+	 */
+	gt.parseDescription = function(guider) {
+		// don't parse if already done
+		if (guider.isParsed) { return; }
+
+		// parse (make synchronous API request)
+		data = JSON.parse(
+			$.ajax({
+				async: false,
+				type: 'POST',
+				url: mw.util.wikiScript('api'),
+				data: {
+					action: 'parse',
+					format: 'json',
+					text: guider.description,
+				}
+			}).responseText
+		);
+		guider.description = data.parse.text['*'],
+		guider.isParsed = true;
+		// guider html is already "live" so edit it
+		guider.elem.find(".guider_description").html(guider.description);
 	}
 
 

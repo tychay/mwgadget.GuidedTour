@@ -52,12 +52,14 @@
 		tourId = 'gt-'+tourName+'-'+step;
 	} else {
 		tourId = $.cookie('mw-tour');
-		var guiderid = tourId.substr(3); //strip off 'gt-'
-		var pieces = guiderid.split(/-/);
-		// should always happen, but let's be careful
-		if ( pieces.length != 1 ) { 
-			tourName = guiderid.substr(0, guiderid.length - pieces[pieces.length-1].length - 1);
-			//step = pieces[pieces.length-1];
+		if (tourId) {
+			var guiderid = tourId.substr(3); //strip off 'gt-'
+			var pieces = guiderid.split(/-/);
+			// should always happen, but let's be careful
+			if ( pieces.length != 1 ) { 
+				tourName = guiderid.substr(0, guiderid.length - pieces[pieces.length-1].length - 1);
+				//step = pieces[pieces.length-1];
+			}
 		}
 	}
 
