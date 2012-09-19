@@ -57,7 +57,7 @@ guiders.initGuider({
 	// attachment
 	//overlay: true,
 	attachTo: '#searchInput',
-	position: '6',
+	position: 'bottomRight', //try descriptive position (5'oclock)
 	onShow: gt.parseDescription,
 
 	//next: "gt-test-2",
