@@ -146,6 +146,31 @@
 		// guider html is already "live" so edit it
 		guider.elem.find(".guider_description").html(guider.description);
 	}
+	/**
+	 * Add to onshow to make the description as a wikipage reference to pull content from
+	 */
+	gt.descriptionPage = function(guider) {
+		// don't parse if already done
+		if (guider.isParsed) { return; }
+
+		// parse (make synchronous API request)
+		data = JSON.parse(
+			$.ajax({
+				async: false,
+				type: 'POST',
+				url: mw.util.wikiScript('api'),
+				data: {
+					action: 'parse',
+					format: 'json',
+					page: guider.description,
+				}
+			}).responseText
+		);
+		guider.description = data.parse.text['*'],
+		guider.isParsed = true;
+		// guider html is already "live" so edit it
+		guider.elem.find(".guider_description").html(guider.description);
+	}
 
 
 

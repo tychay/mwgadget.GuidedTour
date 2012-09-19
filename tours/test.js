@@ -39,6 +39,7 @@ guiders.initGuider({
 	attachTo: '#n-portal a',
 	position: '3',
 
+
 	next: "gt-test-3",
 	buttons: [
 		{ name: 'Hide Tour', onclick: gt.hideTour, classString: "plain" },
@@ -68,10 +69,30 @@ guiders.initGuider({
 });
 
 /**
- * Test out tour launching
+ * Test out mediawiki description pages
  */
 guiders.initGuider({
 	id: "gt-test-4",
+	title: 'Test mediawiki description pages',
+	description: 'Guided_tours/tours/test/sample',
+
+	// attachment
+	overlay: true,
+	onShow: gt.descriptionPage,
+
+	next: "gt-test-5",
+	buttons: [
+		{ name: 'Hide Tour', onclick: gt.hideTour, classString: "plain" },
+		{ name: 'Go to description page', onclick: function() { window.location = '/wiki/Guided_tours/tours/test/sample'; return false; } },
+		{ name: 'Next', onclick: guiders.next }
+	]
+});
+
+/**
+ * Test out tour launching
+ */
+guiders.initGuider({
+	id: "gt-test-5",
 	title: 'Test launch tour',
 	description: 'Guiders can launch other guided tours. Pretty cool, huh?',
 
