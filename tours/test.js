@@ -60,9 +60,29 @@ guiders.initGuider({
 	position: 'bottomRight', //try descriptive position (5'oclock)
 	onShow: gt.parseDescription,
 
+	next: "gt-test-4",
+	buttons: [
+		{ name: 'Hide Tour', onclick: gt.hideTour, classString: "plain" },
+		{ name: 'Next', onclick: guiders.next }
+	]
+});
+
+/**
+ * Test out tour launching
+ */
+guiders.initGuider({
+	id: "gt-test-4",
+	title: 'Test launch tour',
+	description: 'Guiders can launch other guided tours. Pretty cool, huh?',
+
+	// attachment
+	overlay: true,
+	//position: 'bottomRight', //try descriptive position (5'oclock)
+
 	//next: "gt-test-2",
 	buttons: [
 		{ name: 'Hide Tour', onclick: gt.hideTour, classString: "plain" },
+		{ name: 'Launch a Tour on using Tours', onclick: function() { gt.launchTour('install_tour'); } },
 		{ name: 'End Tour', onclick: gt.endTour }
 	]
 });

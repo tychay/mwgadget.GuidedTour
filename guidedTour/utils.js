@@ -18,6 +18,9 @@
 	// good for tracking what tour we are on
 	guiders.currentTour = '';
 
+	// List of tours currently loaded
+	if (!gt.installed) { gt.installed = {}; }
+
 	/**
 	 * + hideTour(): "Hide Tour" link shows an info guide before closing.
 	 *

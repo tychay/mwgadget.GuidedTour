@@ -17,13 +17,25 @@
 
 	var gt = mw.guidedTour = mw.guidedTour || {};
 
-	gt.gadgetUrl = 'https://www.mediawiki.org/w/index.php?title=User:Tychay/guidedTour/';
-	gt.tourUrl   = 'https://www.mediawiki.org/w/index.php?title=User:Tychay/tours/';
+	// These can be overridden outside
+	if (!gt.gadgetUrl) {
+		gt.gadgetUrl = 'https://www.mediawiki.org/w/index.php?title=User:Tychay/guidedTour/';
+	}
+	if (!gt.tourUrl) {
+		gt.tourUrl   = 'https://www.mediawiki.org/w/index.php?title=User:Tychay/tours/';
+	}
 	//stuff to tack on to the end to get the raw file. Remember to the & or ? in the start
 	// depends on the URL above.
-	gt.rawJs = '&action=raw&ctype=text/javascript';
-	gt.rawCss = '&action=raw&ctype=text/css';
+	if (!gt.rawJs) {
+		gt.rawJs = '&action=raw&ctype=text/javascript';
+	}
+	if (!gt.rawCss) {
+		gt.rawCss = '&action=raw&ctype=text/css';
+	}
 
+	/**
+	 * Give ability to extract query string from URL
+	 */
 	gt.getQuery = function() {
 		var urlParams = {};
 		(function () {
@@ -65,6 +77,28 @@
 
 	// Don't bother loading any more code if there isn't a tour going on
 	if ( !tourId || !tourName ) { return; }
+
+	/**
+	 * Load a tour javascript and launch a tour
+	 */
+	gt.launchTour = function(tourName, tourId) {
+		if ( !tourId ) {
+			tourId = 'gt-'+tourName+'-1';
+		}
+		// prevent double loading of tour script
+		if ( gt.installed[tourName] ) {
+			guiders.currentTour = tourName;
+			guiders.resume(tourId);
+		} else {
+			$.getScript(
+				gt.tourUrl + tourName + '.js' + gt.rawJs,
+				function() {
+					guiders.resume(tourId);
+				}
+			);
+		}
+	}
+
 	// First load guiders and then load the stuff that depends on it, then launch
 	// the tour.
 	$("<link/>", {
@@ -78,13 +112,8 @@
 			//$.getStylesheet( gt.gadgetUrl + 'guiders.css' + gt.rawCss ),
 			$.getScript(
 				gt.gadgetUrl + 'utils.js' + gt.rawJs,
-				function() {
-					$.getScript(
-						gt.tourUrl + tourName + '.js' + gt.rawJs,
-						function() {
-							guiders.resume(tourId);
-						});
-				});
+				function() { gt.launchTour(tourName, tourId); }
+			);
 		}
 	);
 } ( window, document, jQuery, mw ) );
