@@ -76,17 +76,16 @@
 		gt.pingServer(guider, tourname, pieces[pieces.length-1]);
 	};
 	gt.pingServer = function(guider, tour,step) {
-		//TODO: format output for e3 experiments
 		if ( mw.e3 ) {
-			if (console && console.log) {
-			console.log({
-			//mw.e3.track( {
-				eventId: 'guidedtour-'+tour+'-'+step,
+			//if (console && console.log) {
+			//console.log({
+			mw.e3.track( {
+				event_id: 'guidedtour-'+tour+'-'+step,
 				tour: tour,
 				step: step,
-				lastid: guider.id
+				last_id: guider.id
 			});
-			}
+			//}
 		}
 		/* */
 	}
