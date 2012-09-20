@@ -11,33 +11,41 @@
 ( function ( window, document, jQuery, mw, guiders ) {
 
 	var gt = mw.guidedTour = mw.guidedTour || {};
+	// List of tours currently loaded
+	if (!gt.installed) { gt.installed = {}; }
+
 
 	// cookie the users when they are in the tour
 	guiders.cookie = 'mw-tour';
+	// add x button to top right
+	guiders._defaultSettings.xButton = true;
 
 	// good for tracking what tour we are on
 	guiders.currentTour = '';
 
-	// List of tours currently loaded
-	if (!gt.installed) { gt.installed = {}; }
-
 	/**
-	 * + hideTour(): "Hide Tour" link shows an info guide before closing.
+	 * onHide: log hidden event before hiding
 	 *
-	 * Note: the info guide also generates an event.
+	 * Old version:shows an info guide before closing. Note: the info guide also
+	 * generates an event.
 	 */
-	gt.hideTour = function (tour_name) {
+	guiders.onHide = function (tour_name) {
 		// notify that we are dismissing the tour
 		//(not sure we need this)
 		//$.ajax({url:ajaxurl, data:{action:'guided_tour_hide', tour: GTL10n.tour, nonce: GTL10n.nonce }});
 
 		// interstial hiding...
-		guiders.hideAll(); //Hide current guider
-		guiders.show('gt-hide'); //show future help notice
+		//guiders.hideAll(); //Hide current guider
+		//guiders.show('gt-hide'); //show future help notice
 		// TODO: should launch a default tour element
 
-		//guiders.endTour(); //remove cookies and hide guider
+		if ( guiders.currentTour ) {
+			var guider = guiders._guiderById(guiders._lastCreatedGuiderID);
+			gt.pingServer( guider, guiders.currentTour, 'hide' );
+		}
+		guiders.endTour(); //remove cookies and hide guider
 	}
+	/*
 	guiders.initGuider({
 		id: "gt-hide",
 		title: 'Remember!',
@@ -53,6 +61,7 @@
 			{ name: 'Close', onclick: function() { guiders.endTour(); } }
 		]
 	});
+	/* */
 
 	// STATS!
 	/**
@@ -98,7 +107,6 @@
 	 * endTour(): When you quit the tour (early) (step=end)
 	 */
 	gt.endTour = function() {
-
 		if ( guiders.currentTour ) {
 			var guider = guiders._guiderById(guiders._lastCreatedGuiderID);
 			gt.pingServer( guider, guiders.currentTour, 'end' );

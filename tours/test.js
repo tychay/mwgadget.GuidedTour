@@ -21,7 +21,7 @@ guiders.initGuider({
 
 	next: "gt-test-2",
 	buttons: [
-		{ name: 'Hide Tour', onclick: gt.hideTour, classString: "plain" },
+		//{ name: 'Hide Tour', onclick: gt.hideTour, classString: "plain" },
 		{ name: 'Start Tour', onclick: guiders.next }
 	]
 });
@@ -42,7 +42,7 @@ guiders.initGuider({
 
 	next: "gt-test-3",
 	buttons: [
-		{ name: 'Hide Tour', onclick: gt.hideTour, classString: "plain" },
+		//{ name: 'Hide Tour', onclick: gt.hideTour, classString: "plain" },
 		{ name: 'Next', onclick: guiders.next }
 	]
 });
@@ -63,7 +63,7 @@ guiders.initGuider({
 
 	next: "gt-test-4",
 	buttons: [
-		{ name: 'Hide Tour', onclick: gt.hideTour, classString: "plain" },
+		//{ name: 'Hide Tour', onclick: gt.hideTour, classString: "plain" },
 		{ name: 'Next', onclick: guiders.next }
 	]
 });
@@ -82,7 +82,7 @@ guiders.initGuider({
 
 	next: "gt-test-5",
 	buttons: [
-		{ name: 'Hide Tour', onclick: gt.hideTour, classString: "plain" },
+		//{ name: 'Hide Tour', onclick: gt.hideTour, classString: "plain" },
 		{ name: 'Go to description page', onclick: function() { window.location = '/wiki/Guided_tours/tours/test/sample'; return false; } },
 		{ name: 'Next', onclick: guiders.next }
 	]
@@ -102,7 +102,7 @@ guiders.initGuider({
 
 	//next: "gt-test-2",
 	buttons: [
-		{ name: 'Hide Tour', onclick: gt.hideTour, classString: "plain" },
+		//{ name: 'Hide Tour', onclick: gt.hideTour, classString: "plain" },
 		{ name: 'Launch a Tour on using Tours', onclick: function() { gt.launchTour('install_tour'); } },
 		{ name: 'End Tour', onclick: gt.endTour }
 	]

@@ -21,7 +21,7 @@ guiders.initGuider({
 
 	//next: "gt-test-2",
 	buttons: [
-		{ name: 'Hide Tour', onclick: gt.hideTour, classString: "plain" },
+		//{ name: 'Hide Tour', onclick: gt.hideTour, classString: "plain" },
 		{ name: 'End Tour', onclick: gt.endTour }
 	]
 });
