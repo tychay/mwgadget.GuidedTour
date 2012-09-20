@@ -24,12 +24,14 @@
 	guiders.currentTour = '';
 
 	/**
-	 * onHide: log hidden event before hiding
+	 * onClose(): log hidden event before hiding
 	 *
 	 * Old version:shows an info guide before closing. Note: the info guide also
 	 * generates an event.
+	 *
+	 * Not onHide() becase that is called even if tour end.
 	 */
-	guiders.onHide = function (tour_name) {
+	guiders.onClose = function (tour_name) {
 		// notify that we are dismissing the tour
 		//(not sure we need this)
 		//$.ajax({url:ajaxurl, data:{action:'guided_tour_hide', tour: GTL10n.tour, nonce: GTL10n.nonce }});
