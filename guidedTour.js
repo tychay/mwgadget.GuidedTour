@@ -1,7 +1,7 @@
  /**
   * Gadget for Guided Tour for MediaWiki
   *
-  * Uses a WordPress.com customized version of Optimize.ly's Guiders.js file.
+  * Based on a WordPress.com customized version of Optimize.ly's Guiders.js file.
   *
   * To use, add this, the guidedTour/* contents, and tours to mediawiki and edit the URL's
   * to point to the right path, then include as a user script (for now).
@@ -19,7 +19,7 @@
 
 	// These can be overridden outside
 	if (!gt.gadgetUrl) {
-		gt.gadgetUrl = 'https://www.mediawiki.org/w/index.php?title=User:Tychay/guidedTour/';
+		gt.gadgetUrl = '//www.mediawiki.org/w/index.php?title=User:Tychay/guidedTour/';
 	}
 	if (!gt.tourUrl) {
 		gt.tourUrl   = 'https://www.mediawiki.org/w/index.php?title=User:Tychay/tours/';
@@ -32,6 +32,20 @@
 	if (!gt.rawCss) {
 		gt.rawCss = '&action=raw&ctype=text/css';
 	}
+
+	// Define modules.
+	mw.loader.implement(
+		'jquery.guiders',
+		[ gt.gadgetUrl+'guiders.js'+gt.rawJs ],
+		{ 'all' : [ gt.gadgetUrl+'guiders.css'+gt.rawCss ] },
+		{}
+	);
+	mw.loader.implement(
+		'mw.guidedTour.utils',
+		[ gt.gadgetUrl+'utils.js'+gt.rawJs ],
+		{ 'all' : [ gt.gadgetUrl+'custom.css'+gt.rawCss ] },
+		{}
+	);
 
 	/**
 	 * Give ability to extract query string from URL
@@ -79,7 +93,7 @@
 	if ( !tourId || !tourName ) { return; }
 
 	/**
-	 * Load a tour javascript and launch a tour
+	 * launchTour(): Load a tour javascript and launch a tour
 	 */
 	gt.launchTour = function(tourName, tourId) {
 		if ( !tourId ) {
@@ -101,19 +115,9 @@
 
 	// First load guiders and then load the stuff that depends on it, then launch
 	// the tour.
-	$("<link/>", {
-	   rel: "stylesheet",
-	   type: "text/css",
-	   href: gt.gadgetUrl + 'guiders.css' + gt.rawCss,
-	}).appendTo("head");
-	$.getScript(
-		gt.gadgetUrl + 'guiders.js' + gt.rawJs,
-		function() {
-			//$.getStylesheet( gt.gadgetUrl + 'guiders.css' + gt.rawCss ),
-			$.getScript(
-				gt.gadgetUrl + 'utils.js' + gt.rawJs,
-				function() { gt.launchTour(tourName, tourId); }
-			);
-		}
-	);
+	mw.loader.using( 'jquery.guiders', function() {
+		mw.loader.using( 'mw.guidedTour.utils', function() {
+			gt.launchTour(tourName, tourId);
+		});
+	});
 } ( window, document, jQuery, mw ) );
