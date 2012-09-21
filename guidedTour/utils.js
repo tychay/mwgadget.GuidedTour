@@ -114,7 +114,7 @@
 
 
 	//
-	// UTILITY FUNCTIONS
+	// ONSHOW BINDINGS
 	//
 	/**
 	 * + parseDescription(): Add to onShow to parse description as wikitext
@@ -175,13 +175,24 @@
 	}
 
 
-
-	gt_is_path = function (uri) {
-		return function() { return ( window.location.pathname == uri ); };
+	//
+	// SHOULDSKIP BINDINGS
+	//
+	/**
+	 * isPage(): skip if on a particular wiki page
+	 */
+	gt.isPage = function(pageName) {
+		return function() {
+		   return (	mw.config.get( 'wgPageName' ) == pageName );
+		};
 	}
+	/**
+	 * hasQuery(): skip if has query string (object) and path
+	 */
+	gt.hasQuery = function (query_parts, pageName) {
+		if ( pageName && (mw.config.get( 'wgPageName' ) == pageName) ) { return function() { return false; }; }
 
-	gt_has_query = function (query_parts, uri) {
-		if ( uri && !gt_is_path( uri ) ) { return function() { return false; }; }
+		// TODO: could use mw.util.getParamValue( qname ) here?
 		var urlParams = gt.getQuery();
 		for (var qname in query_parts) {
 			if ( typeof(urlParams[qname]) == 'undefined' )  { return function() { return false; }; }
