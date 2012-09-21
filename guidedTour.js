@@ -46,34 +46,20 @@
 		{ 'all' : [ gt.gadgetUrl+'custom.css'+gt.rawCss ] },
 		{}
 	);
-
 	/**
-	 * Give ability to extract query string from URL
+	 * clean out path variables and the like in tour names
 	 */
-	gt.getQuery = function() {
-		var urlParams = {};
-		(function () {
-			var e,
-				a = /\+/g,  // Regex for replacing addition symbol with a space
-				r = /([^&=]+)=?([^&]*)/g,
-				d = function (s) { return decodeURIComponent(s.replace(a, " ")); },
-				q = window.location.search.substring(1);
-
-				while (e = r.exec(q))
-					urlParams[d(e[1])] = d(e[2]);
-		})();
-		return urlParams;
+	gt.cleanTourName = function(tourName) {
+		return mw.util.rawurlencode( tourName.replace(/^(?:\.\.\/)+/, '') );
 	}
 
 	// tour is either in get string or cookie (prefer get string)
-	var queryString = gt.getQuery();
-	var tourName = queryString.tour;
+	var tourName = mw.util.getParamValue( 'tour' );
 	var tourId;
+	//clean out path variables
+	if (tourName) { tourName = gt.cleanTourName( tourName ); }
 	if (tourName) {
-		tourName = tourName.replace(/^(?:\.\.\/)+/, ''); //clean out path variables
-	}
-	if (tourName) {
-		var step = queryString.step;
+		var step = mw.util.getParamValue( 'step' );
 		if (!step) { step = '1'; }
 		tourId = 'gt-'+tourName+'-'+step;
 	} else {
@@ -84,6 +70,7 @@
 			// should always happen, but let's be careful
 			if ( pieces.length != 1 ) { 
 				tourName = guiderid.substr(0, guiderid.length - pieces[pieces.length-1].length - 1);
+				tourName = gt.cleanTourName( tourName );
 				//step = pieces[pieces.length-1];
 			}
 		}

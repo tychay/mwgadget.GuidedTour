@@ -32,15 +32,12 @@
 	 * Not onHide() becase that is called even if tour end.
 	 */
 	guiders.onClose = function (tour_name) {
-		// notify that we are dismissing the tour
-		//(not sure we need this)
-		//$.ajax({url:ajaxurl, data:{action:'guided_tour_hide', tour: GTL10n.tour, nonce: GTL10n.nonce }});
-
 		// interstial hiding...
 		//guiders.hideAll(); //Hide current guider
 		//guiders.show('gt-hide'); //show future help notice
 		// TODO: should launch a default tour element
 
+		// notify that we are dismissing the tour
 		if ( guiders.currentTour ) {
 			var guider = guiders._guiderById(guiders._lastCreatedGuiderID);
 			gt.pingServer( guider, guiders.currentTour, 'hide' );
@@ -90,18 +87,16 @@
 		gt.pingServer(guider, tourname, pieces[pieces.length-1]);
 	};
 	gt.pingServer = function(guider, tour,step) {
+		var eventObj = {
+			event_id: 'guidedtour-'+tour+'-'+step,
+			tour: tour,
+			step: step,
+			last_id: guider.id
+		};
 		if ( mw.e3 ) {
-			//if (console && console.log) {
-			//console.log({
-			mw.e3.track( {
-				event_id: 'guidedtour-'+tour+'-'+step,
-				tour: tour,
-				step: step,
-				last_id: guider.id
-			});
-			//}
+			mw.e3.track( eventObj );
 		}
-		/* */
+		mw.log( eventObj );
 	}
 	guiders._defaultSettings.onShow = gt.recordStats;
 
@@ -113,9 +108,6 @@
 			var guider = guiders._guiderById(guiders._lastCreatedGuiderID);
 			gt.pingServer( guider, guiders.currentTour, 'end' );
 		}
-		//TODO add dialog box asking if they want to end the tour permanently here
-		//var r=confirm(GTL10n.confirm_end);
-		//if (r) { gt_tour_complete(); }
 		guiders.endTour(); //remove session cookie and hide tour
 	}
 	/**
@@ -132,7 +124,7 @@
 	// UTILITY FUNCTIONS
 	//
 	/**
-	 * Add to onShow to parse description as wikitext
+	 * + parseDescription(): Add to onShow to parse description as wikitext
 	 */
 	gt.parseDescription = function(guider) {
 		// don't parse if already done
@@ -157,7 +149,8 @@
 		guider.elem.find(".guider_description").html(guider.description);
 	}
 	/**
-	 * Add to onshow to make the description as a wikipage reference to pull content from
+	 * + descriptionPage(): Add to onshow to make the description as a wikipage reference
+	 * to pull content from
 	 */
 	gt.descriptionPage = function(guider) {
 		// don't parse if already done
