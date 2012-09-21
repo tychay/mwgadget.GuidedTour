@@ -691,6 +691,23 @@ var guiders = (function($) {
       //console.log(err);
       return;
     }
+
+	// You can use an onShow function to take some action before the guider is
+	//  shown. (Moved to top because execution can take a while)
+    if (myGuider.onShow) {
+	  // if onShow returns something, assume this means you want to bypass the
+	  //  rest of onShow.
+      var show_return = myGuider.onShow(myGuider);
+	  if (show_return) {
+	  	return show_return;
+	  }
+    }
+    // handle binding of auto-advance action
+    if (myGuider.autoAdvance) {
+      myGuider.bindAdvanceHandler(myGuider);
+      $(myGuider.autoAdvance[0]).bind(myGuider.autoAdvance[1], myGuider._advanceHandler);
+    }
+	// handle overlay and highlight
     if (myGuider.overlay) {
       guiders._showOverlay(myGuider.overlay);
       // if guider is attached to an element, make sure it's visible
@@ -698,39 +715,20 @@ var guiders = (function($) {
         guiders._highlightElement(myGuider.highlight);
       }
     }
-    
+	// bind esc = close action
     if (myGuider.closeOnEscape) {
       guiders._wireEscape(myGuider);
     } else {
       guiders._unWireEscape(myGuider);
     }
   
-    // You can use an onShow function to take some action before the guider is shown.
-    if (myGuider.onShow) {
-      myGuider.onShow(myGuider);
-    }
-    guiders._attach(myGuider);
 
+    guiders._attach(myGuider);
+    myGuider.elem.fadeIn("fast").data("locked", false);
 	//If necessary, save the guider id to a cookie
     if (guiders.cookie) {
       $.cookie(guiders.cookie, id);
     }
-    //handle binding of auto-advance action
-    if (myGuider.autoAdvance) {
-      myGuider.bindAdvanceHandler(myGuider);
-      $(myGuider.autoAdvance[0]).bind(myGuider.autoAdvance[1], myGuider._advanceHandler);
-    }
-	// You can use an onShow function to take some action before the guider is shown.
-    if (myGuider.onShow) {
-	  // if onShow returns something, assume this means you want to bypass the rest of onShow.
-      var show_return = myGuider.onShow(myGuider);
-	  if (show_return) {
-	  	return show_return;
-	  }
-    }
-
-    myGuider.elem.fadeIn("fast").data("locked", false);
-      
     guiders._currentGuiderID = id;
     
     var windowHeight = guiders._windowHeight = $(window).height();

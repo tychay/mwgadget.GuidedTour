@@ -5,21 +5,22 @@
 
 var gt = mw.guidedTour = mw.guidedTour || {};
 
-guiders.currentTour = 'install_tour';
+guiders.currentTour = 'guidedtour';
 gt.installed[guiders.currentTour] = true;
 
 /**
  * Show overlay
  */
 guiders.initGuider({
-	id: "gt-install_tour-1",
-	title: 'Using Guided Tours',
-	description: 'This shows you how to use guided tours to customize a tour.',
+	id: "gt-guidedtour-1",
+	title: 'Understanding the GuidedTours gadget',
+	description: 'Guided_tours/tours/guidedtour/intro',
 
 	// attachment
 	overlay: true,
+	onShow: gt.descriptionPage,
 
-	//next: "gt-test-2",
+	//next: "gt-guidedtour-2",
 	buttons: [
 		//{ name: 'Hide Tour', onclick: gt.hideTour, classString: "plain" },
 		{ name: 'End Tour', onclick: gt.endTour }

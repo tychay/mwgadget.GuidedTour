@@ -102,7 +102,7 @@
 	guiders._defaultSettings.onShow = gt.recordStats;
 
 	/**
-	 * endTour(): When you quit the tour (early) (step=end)
+	 * endTour(): When you close the tour (complete) (step=end)
 	 */
 	gt.endTour = function() {
 		if ( guiders.currentTour ) {
@@ -111,14 +111,6 @@
 		}
 		guiders.endTour(); //remove session cookie and hide tour
 	}
-	/**
-	 * + tourComplete(): When you finish the tour (step=complete)
-	 */
-	gt.tourComplete = function(tour_name) {
-		gt.pingServer( guider, tour_name, 'complete' );
-		return;
-	}
-
 
 
 	//
@@ -129,7 +121,7 @@
 	 */
 	gt.parseDescription = function(guider) {
 		// don't parse if already done
-		if (guider.isParsed) { return; }
+		if (guider.isParsed) { gt.recordStats(guider); return; }
 
 		// parse (make synchronous API request)
 		data = JSON.parse(
@@ -148,6 +140,9 @@
 		guider.isParsed = true;
 		// guider html is already "live" so edit it
 		guider.elem.find(".guider_description").html(guider.description);
+
+		// we override default onShow
+		gt.recordStats(guider);
 	}
 	/**
 	 * + descriptionPage(): Add to onshow to make the description as a wikipage reference
@@ -155,7 +150,7 @@
 	 */
 	gt.descriptionPage = function(guider) {
 		// don't parse if already done
-		if (guider.isParsed) { return; }
+		if (guider.isParsed) { gt.recordStats(guider); return; }
 
 		// parse (make synchronous API request)
 		data = JSON.parse(
@@ -174,6 +169,9 @@
 		guider.isParsed = true;
 		// guider html is already "live" so edit it
 		guider.elem.find(".guider_description").html(guider.description);
+
+		// we override default onShow
+		gt.recordStats(guider);
 	}
 
 
