@@ -11,6 +11,7 @@
 ( function ( window, document, jQuery, mw, guiders ) {
 
 	var gt = mw.guidedTour = mw.guidedTour || {};
+
 	// List of tours currently loaded
 	if (!gt.installed) { gt.installed = {}; }
 
@@ -251,4 +252,4 @@
 
 
 
-} (window, document, jQuery, mw, guiders) );
+} ( window, document, jQuery, mw, guiders ) );

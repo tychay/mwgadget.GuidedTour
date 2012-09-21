@@ -1,0 +1,1 @@
+Enables embedding of [[mw:Guided_tours|Guided Tours]] in wiki.

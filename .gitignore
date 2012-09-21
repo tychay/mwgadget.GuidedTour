@@ -1,2 +1,3 @@
 *.*.swp
 common.js
+*.DS_Store
