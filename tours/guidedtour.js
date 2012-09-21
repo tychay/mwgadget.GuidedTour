@@ -76,6 +76,7 @@ guiders.initGuider({
 	next: "gt-guidedtour-4",
 	buttons: [
 		//{ name: 'Hide Tour', onclick: gt.hideTour, classString: "plain" },
+		{ name: '← Prev', onclick: guiders.prev },
 		{ name: 'End Tour', onclick: gt.endTour }
 	]
 });

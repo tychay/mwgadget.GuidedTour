@@ -18,6 +18,7 @@
 
 	// cookie the users when they are in the tour
 	guiders.cookie = 'mw-tour';
+	guiders.cookieParams = { path: '/' };
 	// add x button to top right
 	guiders._defaultSettings.xButton = true;
 

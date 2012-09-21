@@ -19,18 +19,34 @@
  *
  * Changes:
  * 
- * - cookie: guiders property allows you to name a cookie that gets updated every time show() is called. Requires jQuery Cookies plugin (https://github.com/carhartl/jquery-cookie)
- * - failStep: guiders property allows you to name a step to show() if the show() case fails (attachTo element is missing). For obvious reasons, this should not have an attachTo
- * - _buttonClass: property allows you to change the default button "classname" for all guider buttons (default: guider_button)
+ * - cookie: guiders property allows you to name a cookie that gets updated
+ *   every time show() is called. Requires jQuery Cookies plugin
+ *   (https://github.com/carhartl/jquery-cookie)
+ * - cookieParams: (default: {}) Object that allows customizing cookie
+ *   parameters
+ * - failStep: guiders property allows you to name a step to show() if the
+ *   show() case fails (attachTo element is missing). For obvious reasons, this
+ *   should not have an attachTo
+ * - _buttonClass: property allows you to change the default button "classname"
+ *   for all guider buttons (default: guider_button)
  *
- * - resume(): start up tour from current place in ookie (if set). This is useful when your tour leaves the page you are on. Unlike show, it will skip steps that need to be skipped.
+ * - resume(): start up tour from current place in ookie (if set). This is
+ *   useful when your tour leaves the page you are on. Unlike show, it will
+ *   skip steps that need to be skipped.
  * - endTour(): Like hideAll() but it remembers to remove the cookie position.
- * - initGuider(): Allows for initializing Guiders without actually creating them (useful when guider is not in the DOM yet. Avoids error: base is null [Break On This Error] var top = base.top;
-
- * - autoAdvance: property allows binding to an element (and event) to auto-advance the guider. This is a combination of onShow() binding plus removing of bind when next is done.
- * - shouldSkip: property defines a function handler forces a skip of this step if function returns true.
- * - overlay "error": If not set to true, this defines the class of the overlay. (This is useful for coloring the background of the overlay red on error.
- * - onShow: If this returns a guider object, then it can shunt (skip) the rest of show()
+ * - initGuider(): Allows for initializing Guiders without actually creating
+ *   them (useful when guider is not in the DOM yet. Avoids error:
+ *   <code>base is null [Break On This Error] var top = base.top;</code>
+ *
+ * - autoAdvance: property allows binding to an element (and event) to
+ *   auto-advance the guider. This is a combination of onShow() binding plus
+ *   removing of bind when next is done.
+ * - shouldSkip: property defines a function handler forces a skip of this step
+ *   if function returns true.
+ * - overlay "error": If not set to true, this defines the class of the overlay.
+ *   (This is useful for coloring the background of the overlay red on error.
+ * - onShow: If this returns a guider object, then it can shunt (skip) the rest
+ *   of show()
  *
  * @author tychay@php.net Patches for WordPress.com Guided Tour
  * @todo Merge in this https://github.com/jeff-optimizely/Guiders-JS/pull/33 and modify so it so it checks either visibility or DOM
@@ -88,6 +104,7 @@ var guiders = (function($) {
 
   // Begin additional functionality
   guiders.cookie = ""; //set this if you want to write the step to a cookie each show()
+  guiders.cookieParams = {}; //override default cookie parameters (defaults to ssession cookie where path = page
   guiders.failStep = "";
   /**
    * Various common utility handlers you can bind as advance handlers to your
@@ -177,7 +194,7 @@ var guiders = (function($) {
   guiders._windowHeight = 0;
 
   guiders._addButtons = function(myGuider) {
-	// Add buttons
+    // Add buttons
     var guiderButtonsContainer = myGuider.elem.find(".guider_buttons");
   
     if (myGuider.buttons === null || myGuider.buttons.length === 0) {
@@ -624,7 +641,7 @@ var guiders = (function($) {
     $(".guider").fadeOut("fast");
     var currentGuider = guiders._guiders[guiders._currentGuiderID];
     if (currentGuider && currentGuider.highlight) {
-    	guiders._dehighlightElement(currentGuider.highlight);
+      guiders._dehighlightElement(currentGuider.highlight);
     }
     if (typeof omitHidingOverlay !== "undefined" && omitHidingOverlay === true) {
       // do nothing for now
@@ -639,7 +656,7 @@ var guiders = (function($) {
    */
   guiders.endTour = function(omitHidingOverlay) {
     if (guiders.cookie) {
-      $.cookie(guiders.cookie, null);
+      $.cookie(guiders.cookie, null, guiders.cookieParams);
     }
     guiders.hideAll(omitHidingOverlay);
   };
@@ -692,22 +709,22 @@ var guiders = (function($) {
       return;
     }
 
-	// You can use an onShow function to take some action before the guider is
-	//  shown. (Moved to top because execution can take a while)
+    // You can use an onShow function to take some action before the guider is
+    //  shown. (Moved to top because execution can take a while)
     if (myGuider.onShow) {
-	  // if onShow returns something, assume this means you want to bypass the
-	  //  rest of onShow.
+      // if onShow returns something, assume this means you want to bypass the
+      //  rest of onShow.
       var show_return = myGuider.onShow(myGuider);
-	  if (show_return) {
-	  	return show_return;
-	  }
+      if (show_return) {
+        return show_return;
+      }
     }
     // handle binding of auto-advance action
     if (myGuider.autoAdvance) {
       myGuider.bindAdvanceHandler(myGuider);
       $(myGuider.autoAdvance[0]).bind(myGuider.autoAdvance[1], myGuider._advanceHandler);
     }
-	// handle overlay and highlight
+    // handle overlay and highlight
     if (myGuider.overlay) {
       guiders._showOverlay(myGuider.overlay);
       // if guider is attached to an element, make sure it's visible
@@ -715,7 +732,7 @@ var guiders = (function($) {
         guiders._highlightElement(myGuider.highlight);
       }
     }
-	// bind esc = close action
+    // bind esc = close action
     if (myGuider.closeOnEscape) {
       guiders._wireEscape(myGuider);
     } else {
@@ -725,9 +742,9 @@ var guiders = (function($) {
 
     guiders._attach(myGuider);
     myGuider.elem.fadeIn("fast").data("locked", false);
-	//If necessary, save the guider id to a cookie
+    //If necessary, save the guider id to a cookie
     if (guiders.cookie) {
-      $.cookie(guiders.cookie, id);
+      $.cookie(guiders.cookie, id, guiders.cookieParams);
     }
     guiders._currentGuiderID = id;
     
