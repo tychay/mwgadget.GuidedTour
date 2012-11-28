@@ -18,6 +18,7 @@
 
 	// cookie the users when they are in the tour
 	guiders.cookie = 'mw-tour';
+	guiders.cookieParams = { path: '/' };
 	// add x button to top right
 	guiders._defaultSettings.xButton = true;
 
@@ -102,7 +103,7 @@
 	guiders._defaultSettings.onShow = gt.recordStats;
 
 	/**
-	 * endTour(): When you quit the tour (early) (step=end)
+	 * endTour(): When you close the tour (complete) (step=end)
 	 */
 	gt.endTour = function() {
 		if ( guiders.currentTour ) {
@@ -111,25 +112,17 @@
 		}
 		guiders.endTour(); //remove session cookie and hide tour
 	}
-	/**
-	 * + tourComplete(): When you finish the tour (step=complete)
-	 */
-	gt.tourComplete = function(tour_name) {
-		gt.pingServer( guider, tour_name, 'complete' );
-		return;
-	}
-
 
 
 	//
-	// UTILITY FUNCTIONS
+	// ONSHOW BINDINGS
 	//
 	/**
 	 * + parseDescription(): Add to onShow to parse description as wikitext
 	 */
 	gt.parseDescription = function(guider) {
 		// don't parse if already done
-		if (guider.isParsed) { return; }
+		if (guider.isParsed) { gt.recordStats(guider); return; }
 
 		// parse (make synchronous API request)
 		data = JSON.parse(
@@ -148,6 +141,9 @@
 		guider.isParsed = true;
 		// guider html is already "live" so edit it
 		guider.elem.find(".guider_description").html(guider.description);
+
+		// we override default onShow
+		gt.recordStats(guider);
 	}
 	/**
 	 * + descriptionPage(): Add to onshow to make the description as a wikipage reference
@@ -155,7 +151,7 @@
 	 */
 	gt.descriptionPage = function(guider) {
 		// don't parse if already done
-		if (guider.isParsed) { return; }
+		if (guider.isParsed) { gt.recordStats(guider); return; }
 
 		// parse (make synchronous API request)
 		data = JSON.parse(
@@ -174,16 +170,30 @@
 		guider.isParsed = true;
 		// guider html is already "live" so edit it
 		guider.elem.find(".guider_description").html(guider.description);
+
+		// we override default onShow
+		gt.recordStats(guider);
 	}
 
 
-
-	gt_is_path = function (uri) {
-		return function() { return ( window.location.pathname == uri ); };
+	//
+	// SHOULDSKIP BINDINGS
+	//
+	/**
+	 * isPage(): skip if on a particular wiki page
+	 */
+	gt.isPage = function(pageName) {
+		return function() {
+		   return (	mw.config.get( 'wgPageName' ) == pageName );
+		};
 	}
+	/**
+	 * hasQuery(): skip if has query string (object) and path
+	 */
+	gt.hasQuery = function (query_parts, pageName) {
+		if ( pageName && (mw.config.get( 'wgPageName' ) == pageName) ) { return function() { return false; }; }
 
-	gt_has_query = function (query_parts, uri) {
-		if ( uri && !gt_is_path( uri ) ) { return function() { return false; }; }
+		// TODO: could use mw.util.getParamValue( qname ) here?
 		var urlParams = gt.getQuery();
 		for (var qname in query_parts) {
 			if ( typeof(urlParams[qname]) == 'undefined' )  { return function() { return false; }; }

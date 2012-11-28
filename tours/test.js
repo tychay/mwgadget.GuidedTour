@@ -103,7 +103,7 @@ guiders.initGuider({
 	//next: "gt-test-2",
 	buttons: [
 		//{ name: 'Hide Tour', onclick: gt.hideTour, classString: "plain" },
-		{ name: 'Launch a Tour on using Tours', onclick: function() { gt.launchTour('install_tour'); } },
+		{ name: 'Launch a Tour on using Tours', onclick: function() { gt.launchTour('guidedtour'); } },
 		{ name: 'End Tour', onclick: gt.endTour }
 	]
 });

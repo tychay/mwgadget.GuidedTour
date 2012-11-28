@@ -33,13 +33,6 @@
 		gt.rawCss = '&action=raw&ctype=text/css';
 	}
 
-	// Define modules.
-	mw.loader.implement(
-		'jquery.guiders',
-		[ gt.gadgetUrl+'guiders.js'+gt.rawJs ],
-		{ 'all' : [ gt.gadgetUrl+'guiders.css'+gt.rawCss ] },
-		{}
-	);
 	/**
 	 * clean out path variables and the like in tour names
 	 */
@@ -65,7 +58,7 @@
 			if ( pieces.length != 1 ) { 
 				tourName = guiderid.substr(0, guiderid.length - pieces[pieces.length-1].length - 1);
 				tourName = gt.cleanTourName( tourName );
-				//step = pieces[pieces.length-1];
+				//var step = pieces[pieces.length-1];
 			}
 		}
 	}
@@ -74,7 +67,7 @@
 	if ( !tourId || !tourName ) { return; }
 
 	/**
-	 * launchTour(): Load a tour javascript and launch a tour
+	 * mw.guidedTour.launchTour(): Load a tour javascript and launch a tour
 	 */
 	gt.launchTour = function(tourName, tourId) {
 		if ( !tourId ) {
@@ -96,6 +89,12 @@
 
 	// First load guiders and then load the stuff that depends on it, then
 	// 	launch the tour.
+	mw.loader.implement(
+		'jquery.guiders',
+		[ gt.gadgetUrl+'guiders.js'+gt.rawJs ],
+		{ 'all' : [ gt.gadgetUrl+'guiders.css'+gt.rawCss ] },
+		{}
+	);
 	mw.loader.using( 'jquery.guiders', function() {
 		mw.loader.implement(
 			'mw.guidedTour.utils',
