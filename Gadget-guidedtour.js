@@ -9,7 +9,7 @@
   * If moved or testing self, please edit the gadgetUrl and tourUrl params;
   *
   * @package    mwgadget.GuidedTour
-  * @author     terry chay <tychay@mediawiki.org>
+  * @author     terry chay <tchay@wikimedia.org>
   * @version    $Id$
 */
 ( function ( window, document, jQuery, mw ) {
