@@ -12,7 +12,7 @@
   * @author     terry chay <tchay@wikimedia.org>
   * @version    $Id$
 */
-( function ( window, document, jQuery, mw ) {
+( function ( window, document, $, mw ) {
 	'use strict';
 
 	var gt = mw.guidedTour = mw.guidedTour || {};
